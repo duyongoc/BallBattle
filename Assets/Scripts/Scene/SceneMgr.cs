@@ -27,8 +27,8 @@ public class SceneMgr : MonoBehaviour
     #region UNITY
     private void Start()
     {
-
-        ChangeState(m_sceneMenu);
+        //ChangeState(m_sceneMenu);
+        ChangeState(m_sceneInGame);
     }
 
     private void FixedUpdate()

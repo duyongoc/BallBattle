@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameMgr : MonoBehaviour
 {
+    
+    // public bool isSkipTutorial;
+    // public bool isMovingCamera;
+
     #region singleton
     public static GameMgr s_instane; 
 
@@ -21,62 +25,12 @@ public class GameMgr : MonoBehaviour
     }
     #endregion  
 
-    public bool isSkipTutorial;
-    public bool isMovingCamera;
-
-    // private float timeDt = 0;
-    // private int indexPhase = 0;
-    // private bool phaseEnd = false;
-
-    private void LoadData()
+    public void LoadData()
     {
 
     }
 
-    private void StartPhase()
-    {
-        //SpawnEnemyMgr.GetInstance().SetActiceInPhase(phases[indexPhase]);
-        //Debug.Log("Change Phase index: " + indexPhase);
-    }
-
-    #region UNTIY
-    private void Start()
-    {
-        StartPhase();   
-    }
-
-    private void Update()
-    {
-        // if(phaseEnd)
-        //     return;
-
-        // if (SceneMgr.GetInstance().IsStateInGame())
-        // {
-        //     // Debug.Log("Change phase:--- " );
-        //     timeDt += Time.deltaTime;
-        //     if(indexPhase + 1 < phases.Length && timeDt > phases[indexPhase].timePhase)
-        //     {
-        //         // Debug.Log("Change Phase index: " + indexPhase);
-        //         SpawnEnemyMgr.GetInstance().SetActiceInPhase(phases[++indexPhase]);
-        //         timeDt = 0;
-
-        //         if(indexPhase + 1 == phases.Length)
-        //         {
-        //             phaseEnd = true;
-        //         }
-        //     }
-        // }
-
-    }
-    #endregion
-
-    public void Reset()
-    {
-        // indexPhase = 0;
-        // StartPhase();
-        
-        // phaseEnd = false;
-    }
+    
 
     public static GameMgr GetInstance()
     {
