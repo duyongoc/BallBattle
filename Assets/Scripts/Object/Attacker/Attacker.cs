@@ -19,7 +19,7 @@ public class Attacker : MonoBehaviour
 
     }   
 
-    private void FixedUpdate()
+    private void Update()
     {
         switch(currentState)
         {
@@ -47,5 +47,13 @@ public class Attacker : MonoBehaviour
 
     }
     #endregion
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Ball")
+        {
+            other.transform.SetParent(this.transform);
+        }
+    }
 
 }

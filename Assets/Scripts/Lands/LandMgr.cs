@@ -26,6 +26,9 @@ public class LandMgr : MonoBehaviour
     private float timeLimit = 0;
     private float timer = 0;
 
+    //
+    private bool firstCreateBall = false;
+
     #region singleton
     public static LandMgr s_instance;
     
@@ -73,8 +76,8 @@ public class LandMgr : MonoBehaviour
     #region Update PHASE
     private void UpdatePhase()
     {
-        timer -= Time.deltaTime;
         txtTime.text = ((int)timer).ToString();
+        timer -= Time.deltaTime;
 
         if(timer <= 0)
             ChangePhaseWithTime();
@@ -82,6 +85,8 @@ public class LandMgr : MonoBehaviour
 
     private void OnUpdatePhaseDown()
     {
+        CreateTheBall();
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -102,6 +107,8 @@ public class LandMgr : MonoBehaviour
 
     private void OnUpdatePhaseUp()
     {
+        CreateTheBall();
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -128,7 +135,24 @@ public class LandMgr : MonoBehaviour
         else
             currentPhase = Phase.DOWN;
 
+        ResetPhase();
         timer = timeLimit;
+    }
+
+    private void CreateTheBall()
+    {
+        if(!firstCreateBall)
+        {
+            spawnObject.CreateTheBall();
+            firstCreateBall = true;
+        }
+    }
+
+    private void ResetPhase()
+    {
+        firstCreateBall = false;
+        spawnObject.Reset();
+
     }
 
     public static LandMgr GetInstance()
