@@ -18,7 +18,7 @@ public class Ball : MonoBehaviour
     #region UNITY
     private void Start()
     {
-
+        
     }
 
     private void Update()
@@ -33,6 +33,7 @@ public class Ball : MonoBehaviour
                 OnStateNone();
                 break;
         }
+        // Debug.Log(currentState);
     }
     #endregion
 
@@ -40,17 +41,31 @@ public class Ball : MonoBehaviour
     private void OnStateMoving()
     {
         transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+
+        if(Vector3.Distance(transform.position, target.position) <= 1.5f)
+        {
+            var tar = target.GetComponent<Attacker>();
+            tar.CatchTheBall(this.gameObject);
+
+            ChangeState(State.None);
+        }
     }
 
     private void OnStateNone()
     {
-
+        
     }
     #endregion
 
     public void SetTarget(Transform tar)
     {
         target = tar;
+        ChangeState(State.Moving);
+    }
+
+    public void ChangeState(State newState)
+    {
+        currentState = newState;
     }
 
 }

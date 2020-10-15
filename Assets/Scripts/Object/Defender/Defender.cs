@@ -6,10 +6,13 @@ using UnityEngine.UI;
 public class Defender : MonoBehaviour
 {
     [Header("Config param of Attacker")]
-    public ScriptAttacker scriptAttacker;
+    public ScriptDefender scriptDefender;
 
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
+
+    [Header("Circle Detection")]
+    public GameObject circleDetection;
 
     [Header("Current state of defender")]
     public State currentState = State.Stand;
@@ -20,20 +23,20 @@ public class Defender : MonoBehaviour
     //
     private Transform target;
 
-    private float normalSpeed = 0;
     private float spawnTime = 0;
+    private float normalSpeed = 0;
+    private float returnSpeed = 0;
+
     private float spawnProcess = 0;
-
-    private float distanceCatch = 0.5f;
-
+    private float distanceCatch = 1f;
 
     private Vector3 originPos;
 
     private void LoadData()
     {
-        normalSpeed = scriptAttacker.normalSpeed;
-        spawnTime = scriptAttacker.spawnTime;
-
+        spawnTime = scriptDefender.spawnTime;
+        normalSpeed = scriptDefender.normalSpeed;
+        returnSpeed = scriptDefender.returnSpeed;
         //
         originPos = transform.position;
     }
@@ -81,9 +84,11 @@ public class Defender : MonoBehaviour
         spawnProcess += Time.deltaTime;
         spawnTimeSlider.value = spawnProcess / spawnTime;
 
-        if (spawnProcess == spawnTime)
+        if (spawnProcess >= spawnTime)
         {
             spawnTimeSlider.gameObject.SetActive(false);
+            circleDetection.SetActive(true);
+
             ChangeState(State.Stand);
         }
 
@@ -97,12 +102,15 @@ public class Defender : MonoBehaviour
 
     private void OnStateMoving()
     {
+        if(target == null)
+            ChangeState(State.Stand);
+
         transform.position = Vector3.MoveTowards(transform.position, target.position, normalSpeed * Time.deltaTime);
 
         if (Vector3.SqrMagnitude(transform.position - target.position) <= distanceCatch * distanceCatch)
         {
             target.GetComponent<Attacker>().PassTheBall();
-            ChangeState(State.Stand);
+            ChangeState(State.ReturnPos);
         }
     }
 
@@ -113,9 +121,9 @@ public class Defender : MonoBehaviour
 
     private void OnStateReturnPos()
     {
-        transform.position = Vector3.MoveTowards(transform.position, originPos, normalSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, originPos, returnSpeed * Time.deltaTime);
 
-        if (Vector3.SqrMagnitude(transform.position - originPos) <= 0.1f)
+        if (Vector3.SqrMagnitude(transform.position - originPos) == 0f)
         {
             //target.GetComponent<Attacker>().PassTheBall();
             ChangeState(State.Stand);

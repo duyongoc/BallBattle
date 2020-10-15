@@ -12,20 +12,25 @@ public class Attacker : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
+    [Header("Position to hold the ball")]
+    public Transform transHoldBall;
+
     [Header("State of Attacker")]
     public State currentState = State.Waiting;
     public enum State { Waiting, Stand, Moving, Inactive, None }
 
-
+    
     //
     //private 
     //
-    private GameOjbect ball;
+    private GameObject ball = null;
 
     private float normalSpeed = 0;
     private float spawnTime = 0;
     private float spawnProcess = 0;
 
+    private bool inActive = false;
+    public bool InActive { get => inActive; set => inActive = value; }
 
     private void LoadData()
     {
@@ -57,6 +62,7 @@ public class Attacker : MonoBehaviour
 
             case State.Inactive:
                 OnStateInactive();
+                break;
 
             case State.None:
                 break;
@@ -71,9 +77,11 @@ public class Attacker : MonoBehaviour
         spawnProcess += Time.deltaTime;
         spawnTimeSlider.value = spawnProcess / spawnTime;
 
-        if (spawnProcess == spawnTime)
+        if (spawnProcess >= spawnTime)
         {
             spawnTimeSlider.gameObject.SetActive(false);
+            spawnProcess = 0;
+
             ChangeState(State.Moving);
         }
     }
@@ -99,22 +107,29 @@ public class Attacker : MonoBehaviour
     public void PassTheBall()
     {
         GameObject otherAttacker = null;
-
         var listAttacker = SpawnMgr.GetInstance().listAttacker;
-        float distance = Vector3.Distance(transform.position, arrList[0].transform.position);
-
+        
+        float distance = 100;
         foreach (GameObject go in listAttacker)
         {
-            var disTmp = Vector3.Distance(transform.position, arrList[0].transform.position);
-            if (distance > disTmp)
+            if(go.GetComponent<Attacker>().StateInactive())
+                continue;
+
+            var disTmp = Vector3.Distance(transform.position, go.transform.position);
+            if (disTmp != 0 && disTmp < distance )
             {
                 distance = disTmp;
                 otherAttacker = go;
             }
         }
 
-        ball.GetComponent<Ball>().SetTarget(otherAttacker.transform);
-        SetInactivePerTime(4);
+        if(otherAttacker != null && ball != null)
+        {
+            ball.GetComponent<Ball>().SetTarget(otherAttacker.transform);
+            ball = null;
+        }
+            
+        SetInactivePerTime(3);
 
         // game over
         if (otherAttacker == null)
@@ -125,17 +140,35 @@ public class Attacker : MonoBehaviour
 
     private void SetInactivePerTime(float time)
     {
-        ChangeState(State.Stand);
-        GetComponent<Collider>().enable = false;
+        ChangeState(State.Inactive);
+        GetComponent<Collider>().enabled = false;
+    
         StartCoroutine("ChangeStateMovingWithTime", time);
+    }
+
+    public bool IsHoldTheBall()
+    {
+        return (ball != null);
+    }
+
+    public void CatchTheBall(GameObject obj)
+    {
+        ball = obj.gameObject;
+        ball.transform.position = transHoldBall.position;
+        ball.transform.SetParent(this.transform);
     }
 
     IEnumerator ChangeStateMovingWithTime(float time)
     {
-        yield return new WaitforSeconds(time);
+        yield return new WaitForSeconds(time);
 
-        GetComponent<Collider>().enable = true;
+        GetComponent<Collider>().enabled = true;
         ChangeState(State.Moving);
+    }
+
+    public bool StateInactive()
+    {
+        return currentState == State.Inactive;
     }
 
     public void ChangeState(State newState)
@@ -148,6 +181,7 @@ public class Attacker : MonoBehaviour
         if (other.tag == "Ball")
         {
             ball = other.gameObject;
+            ball.transform.position = transHoldBall.position;
             ball.transform.SetParent(this.transform);
         }
     }

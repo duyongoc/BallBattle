@@ -11,9 +11,6 @@ public class LandMgr : MonoBehaviour
     [Header("Show text time up")]
     public Text txtTime;
 
-    [Header("Spawn object")]
-    public SpawnObject spawnObject;
-
     [Header("Current phase")]
     public Phase currentPhase = Phase.DOWN;
     public enum Phase { DOWN, UP };
@@ -28,6 +25,8 @@ public class LandMgr : MonoBehaviour
 
     //
     private bool firstCreateBall = false;
+
+    private SpawnMgr spawnMgr;
 
     #region singleton
     public static LandMgr s_instance;
@@ -50,6 +49,7 @@ public class LandMgr : MonoBehaviour
     private void Start()
     {
         layer_mask = LayerMask.GetMask("Ground");
+        spawnMgr = SpawnMgr.GetInstance();
 
         LoadData();
 
@@ -94,11 +94,11 @@ public class LandMgr : MonoBehaviour
             {
                 if(hit.point.z < 0)
                 {
-                    spawnObject.SpawnAttacker(hit.point);
+                    spawnMgr.SpawnAttacker(hit.point);
                 }
                 else if(hit.point.z > 0)
                 {
-                    spawnObject.SpawnDefender(hit.point);
+                    spawnMgr.SpawnDefender(hit.point);
                 }
                 // Debug.Log(hit.point.z);
             }
@@ -116,11 +116,11 @@ public class LandMgr : MonoBehaviour
             {
                 if(hit.point.z < 0)
                 {
-                    spawnObject.SpawnDefender(hit.point);
+                    spawnMgr.SpawnDefender(hit.point);
                 }
                 else if(hit.point.z > 0)
                 {
-                    spawnObject.SpawnAttacker(hit.point);
+                    spawnMgr.SpawnAttacker(hit.point);
                 }
                 // Debug.Log(hit.point.z);
             }
@@ -143,7 +143,7 @@ public class LandMgr : MonoBehaviour
     {
         if(!firstCreateBall)
         {
-            spawnObject.CreateTheBall();
+            spawnMgr.CreateTheBall();
             firstCreateBall = true;
         }
     }
@@ -151,7 +151,7 @@ public class LandMgr : MonoBehaviour
     private void ResetPhase()
     {
         firstCreateBall = false;
-        spawnObject.Reset();
+        spawnMgr.Reset();
 
     }
 

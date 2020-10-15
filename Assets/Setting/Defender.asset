@@ -9,7 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 623bf2b517bf0a849912539f751d4950, type: 3}
-  m_Name: CONFIG
+  m_Script: {fileID: 11500000, guid: 2d335b97d7af78f4a894f047aaf8992f, type: 3}
+  m_Name: Defender
   m_EditorClassIdentifier: 
-  timeLimit: 10
+  energyRegen: 0.5
+  energyCost: 2
+  spawnTime: 1
+  normalSpeed: 4
+  carryingSpeed: 0.75
+  returnSpeed: 2
+  detectionRange: 35

@@ -9,6 +9,11 @@ public class CricleDetection : MonoBehaviour
     {
         if(other.tag == "Attacker")
         {
+            // check the attacker isn't holding the ball
+            var tar = other.GetComponent<Attacker>();
+            if(!tar.IsHoldTheBall())
+                return;
+
             this.GetComponentInParent<Defender>().SetStateMove(other.transform);
         }
     }
