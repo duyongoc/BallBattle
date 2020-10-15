@@ -7,4 +7,8 @@ public class ScriptConfig : ScriptableObject
 {
     [Header("Set limit time")]
     public float timeLimit = 140;
+    
+    [Header("Ball Speed")]
+    public float ballSpeed = 1.5f;
+
 }

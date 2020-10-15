@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnObject : MonoBehaviour
+public class SpawnMgr : MonoBehaviour
 {
     [Header("Object")]
     public GameObject prefabAttacker;
@@ -20,7 +20,18 @@ public class SpawnObject : MonoBehaviour
     private GameObject tmp; 
     private GameObject ballTmp;
 
-    
+    #region singleton
+    public static SpawnMgr s_instance;
+
+    private void Awake()
+    {
+        if(s_instance != null)
+        {
+            return;
+        }
+        s_instance = this;
+    }
+    #endregion    
 
     public void CreateTheBall()
     {
@@ -68,6 +79,11 @@ public class SpawnObject : MonoBehaviour
         listDefender.Add(tmp);
     }
 
+
+    public static SpawnMgr GetInstance()
+    {
+        return s_instance;
+    }
 
     public void Reset()
     {
