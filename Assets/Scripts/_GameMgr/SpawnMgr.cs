@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class SpawnMgr : MonoBehaviour
 {
+    [Header("Param of the game")]
+    public ScriptAttacker scriptAttacker;
+    public ScriptDefender scriptDefender;
+
+    [Header("All of energy of the game")]
+    public float enemyEnergy;
+    public float playerEnergy;
+    public float delayAmount = 1;
+    
     [Header("Object")]
     public GameObject prefabAttacker;
     public GameObject prefabDefender;
@@ -11,6 +20,7 @@ public class SpawnMgr : MonoBehaviour
     [Header("The Ball")]
     public GameObject prefabBall;
 
+    [Header("List object was created")]
     public List<GameObject> listAttacker;
     public List<GameObject> listDefender;
 
@@ -19,6 +29,10 @@ public class SpawnMgr : MonoBehaviour
     //
     private GameObject tmp; 
     private GameObject ballTmp;
+
+    private float timer = 0; 
+    private float energyRegenEnemy = 0;
+    private float energyRegenPlayer = 0;
 
     #region singleton
     public static SpawnMgr s_instance;
@@ -33,6 +47,33 @@ public class SpawnMgr : MonoBehaviour
     }
     #endregion    
 
+    private void LoadData()
+    {
+        energyRegenEnemy = scriptDefender.energyRegen;
+        energyRegenPlayer = scriptAttacker.energyRegen;
+    }
+
+    #region UNITY
+    private void Start()
+    {
+
+    }
+
+    private void FixedUpdate()
+    {   
+        timer += Time.deltaTime;
+        if(timer >= delayAmount) 
+        {
+            enemyEnergy += energyRegenEnemy;
+            playerEnergy += energyRegenPlayer;
+
+            timer = 0;
+        }
+    }
+    #endregion
+
+
+    #region CREATE OBJECT
     public void CreateTheBall()
     {
         if(LandMgr.GetInstance().IsPhaseDown())
@@ -78,6 +119,7 @@ public class SpawnMgr : MonoBehaviour
 
         listDefender.Add(tmp);
     }
+    #endregion
 
 
     public static SpawnMgr GetInstance()

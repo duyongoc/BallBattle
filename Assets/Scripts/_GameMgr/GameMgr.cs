@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameMgr : MonoBehaviour
 {
-    
+
     // public bool isSkipTutorial;
     // public bool isMovingCamera;
 
@@ -29,7 +29,6 @@ public class GameMgr : MonoBehaviour
     {
 
     }
-
     
 
     public static GameMgr GetInstance()

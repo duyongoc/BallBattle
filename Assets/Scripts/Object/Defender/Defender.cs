@@ -11,12 +11,14 @@ public class Defender : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
-    [Header("Circle Detection")]
+    [Header("Enable the Defender")]
     public GameObject circleDetection;
+    public Material matInactive;
+
 
     [Header("Current state of defender")]
     public State currentState = State.Stand;
-    public enum State { Waiting, Stand, Moving, Inactive, ReturnPos, None }
+    public enum State { Spawning, Stand, Moving, Inactive, ReturnPos, None }
 
     //
     //private
@@ -24,35 +26,42 @@ public class Defender : MonoBehaviour
     private Transform target;
 
     private float spawnTime = 0;
+    private float reactivateTime = 0;
     private float normalSpeed = 0;
     private float returnSpeed = 0;
 
     private float spawnProcess = 0;
     private float distanceCatch = 1f;
 
+    private Material matDefault;
     private Vector3 originPos;
 
     private void LoadData()
     {
         spawnTime = scriptDefender.spawnTime;
+        reactivateTime = scriptDefender.reactivateTime;
         normalSpeed = scriptDefender.normalSpeed;
         returnSpeed = scriptDefender.returnSpeed;
-        //
-        originPos = transform.position;
+        
+
     }
 
     #region UNITY
     private void Start()
     {
         LoadData();
+
+        //
+        originPos = transform.position;
+        matDefault = GetComponent<Renderer>().material;
     }
 
     private void Update()
     {
         switch (currentState)
         {
-            case State.Waiting:
-                OnStateWaiting();
+            case State.Spawning:
+                OnStateSpawning();
                 break;
 
             case State.Stand:
@@ -79,7 +88,7 @@ public class Defender : MonoBehaviour
     #endregion
 
     #region STATE
-    private void OnStateWaiting()
+    private void OnStateSpawning()
     {
         spawnProcess += Time.deltaTime;
         spawnTimeSlider.value = spawnProcess / spawnTime;
@@ -96,8 +105,7 @@ public class Defender : MonoBehaviour
 
     private void OnStateStand()
     {
-        //transform.position = Vector3.MoveTowards(transform.position, Vector3.forward, 5 * Time.deltaTime);
-        //transform.Translate(Vector3.forward * 5 * Time.deltaTime);
+
     }
 
     private void OnStateMoving()
@@ -106,11 +114,14 @@ public class Defender : MonoBehaviour
             ChangeState(State.Stand);
 
         transform.position = Vector3.MoveTowards(transform.position, target.position, normalSpeed * Time.deltaTime);
-
+        
+        // catch up the attacker who holding the ball
         if (Vector3.SqrMagnitude(transform.position - target.position) <= distanceCatch * distanceCatch)
         {
             target.GetComponent<Attacker>().PassTheBall();
-            ChangeState(State.ReturnPos);
+
+            // set inactive state up
+            EnableStateInactive();
         }
     }
 
@@ -125,15 +136,44 @@ public class Defender : MonoBehaviour
 
         if (Vector3.SqrMagnitude(transform.position - originPos) == 0f)
         {
-            //target.GetComponent<Attacker>().PassTheBall();
-            ChangeState(State.Stand);
+            StartCoroutine("ChangeStateInactiveWithTime", reactivateTime);
         }
     }
     #endregion
 
+    public void ChangeStateInactive()
+    {
+        circleDetection.SetActive(false);
+        GetComponent<Renderer>().material = matInactive;
+        
+        ChangeState(State.ReturnPos);
+    }
+
+    IEnumerator ChangeStateInactiveWithTime(float time)
+    {
+        SetDefenderInactive();
+        ChangeState(State.Inactive);
+
+        yield return new WaitForSeconds(time);
+        SetDefenderActive();
+        ChangeState(State.Stand);
+    }
+
     public void ChangeState(State newState)
     {
         currentState = newState;
+    }
+
+    public void SetDefenderActive()
+    {
+        circleDetection.SetActive(true);
+        GetComponent<Renderer>().material = matDefault;
+    }
+
+    public void SetDefenderInactive()
+    {
+        circleDetection.SetActive(false);
+        GetComponent<Renderer>().material = matInactive;
     }
 
     public void SetStateMove(Transform tar)

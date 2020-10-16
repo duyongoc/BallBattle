@@ -45,7 +45,7 @@ public class Ball : MonoBehaviour
         if(Vector3.Distance(transform.position, target.position) <= 1.5f)
         {
             var tar = target.GetComponent<Attacker>();
-            tar.CatchTheBall(this.gameObject);
+            tar.CatchUpTheBall(this.gameObject);
 
             ChangeState(State.None);
         }

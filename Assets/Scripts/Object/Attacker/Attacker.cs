@@ -12,6 +12,9 @@ public class Attacker : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
+    [Header("Enable the Attacker")]
+    public Material matInactive;
+
     [Header("Position to hold the ball")]
     public Transform transHoldBall;
 
@@ -26,11 +29,12 @@ public class Attacker : MonoBehaviour
     private GameObject ball = null;
 
     private float normalSpeed = 0;
+    private float reactivateTime = 0;
     private float spawnTime = 0;
     private float spawnProcess = 0;
 
-    private bool inActive = false;
-    public bool InActive { get => inActive; set => inActive = value; }
+    private Material matDefault;
+
 
     private void LoadData()
     {
@@ -42,6 +46,9 @@ public class Attacker : MonoBehaviour
     private void Start()
     {
         LoadData();
+
+        //
+        matDefault = GetComponent<Renderer>().material;
     }
 
     private void Update()
@@ -112,11 +119,12 @@ public class Attacker : MonoBehaviour
         float distance = 100;
         foreach (GameObject go in listAttacker)
         {
-            if(go.GetComponent<Attacker>().StateInactive())
+            var atk = go.GetComponent<Attacker>();
+            if(atk.CheckStateInactive())
                 continue;
 
             var disTmp = Vector3.Distance(transform.position, go.transform.position);
-            if (disTmp != 0 && disTmp < distance )
+            if (disTmp != 0 && disTmp < distance && atk.CheckValidPostion(atk))
             {
                 distance = disTmp;
                 otherAttacker = go;
@@ -128,8 +136,8 @@ public class Attacker : MonoBehaviour
             ball.GetComponent<Ball>().SetTarget(otherAttacker.transform);
             ball = null;
         }
-            
-        SetInactivePerTime(3);
+
+        StartCoroutine("ChangeStateInactiveWithTime", reactivateTime);
 
         // game over
         if (otherAttacker == null)
@@ -138,35 +146,54 @@ public class Attacker : MonoBehaviour
         }
     }
 
-    private void SetInactivePerTime(float time)
-    {
-        ChangeState(State.Inactive);
-        GetComponent<Collider>().enabled = false;
-    
-        StartCoroutine("ChangeStateMovingWithTime", time);
-    }
-
     public bool IsHoldTheBall()
     {
         return (ball != null);
     }
 
-    public void CatchTheBall(GameObject obj)
+    public void CatchUpTheBall(GameObject obj)
     {
         ball = obj.gameObject;
         ball.transform.position = transHoldBall.position;
         ball.transform.SetParent(this.transform);
     }
 
-    IEnumerator ChangeStateMovingWithTime(float time)
+    IEnumerator ChangeStateInactiveWithTime(float time)
     {
+        SetAttackerInactive();
+        ChangeState(State.Inactive);
+
         yield return new WaitForSeconds(time);
 
-        GetComponent<Collider>().enabled = true;
+        SetAttackerActive();
         ChangeState(State.Moving);
     }
 
-    public bool StateInactive()
+    public void SetAttackerActive()
+    {
+        GetComponent<Renderer>().material = matDefault;
+        GetComponent<Collider>().enabled = true;
+    }
+
+    public void SetAttackerInactive()
+    {
+        GetComponent<Renderer>().material = matInactive;
+        GetComponent<Collider>().enabled = false;
+    }
+
+    public bool CheckValidPostion(Transform tran)
+    {
+        if(LandMgr.GetInstance().IsPhaseDown())
+        {
+            return (tran.position.z < -12);
+        }
+        else if(LandMgr.GetInstance().IsPhaseUp())
+        {
+            return (tran.position.z < 12);
+        }
+    }
+
+    public bool CheckStateInactive()
     {
         return currentState == State.Inactive;
     }

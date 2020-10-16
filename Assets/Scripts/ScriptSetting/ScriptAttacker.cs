@@ -14,6 +14,9 @@ public class ScriptAttacker: ScriptableObject
 
     [Header("Spawn time")]
     public float spawnTime = 0.5f;
+
+    [Header("Reactivate Time")]
+    public float reactivateTime = 4f;
     
     [Header("Normal Speed")]
     public float normalSpeed = 1.5f;
