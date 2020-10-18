@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Import/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
-  m_configObjects: {}
+    path: Assets/Scenes/InGame.unity
+    guid: 375b55b140e5bfa47a9271dcaaccf61c
+  - enabled: 1
+    path: Assets/Scenes/InGameAR.unity
+    guid: e8dd1ad4f9abe42498a790f093b61073
+  m_configObjects:
+    com.unity.xr.arcore.PlayerSettings: {fileID: 11400000, guid: 9f5aed21c79cf404ab8f0b276e589b23,
+      type: 2}
+    com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: 6b6049b5696384b4190020f6dc368d89,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: bd9190b2b6d80bf4289d0cfee8d0f6f8,
+      type: 2}

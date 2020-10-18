@@ -59,6 +59,13 @@ public class GameMgr : MonoBehaviour
         }
     }
     #endregion
+
+    public void SetPhaseDraw()
+    {
+        currentPhaseGame++;
+        sceneMgr.m_sceneEndPhase.Init("", "Win");
+        sceneMgr.ChangeState(sceneMgr.m_sceneEndPhase);
+    }
     
     public void SetPhaseEnemywin()
     {

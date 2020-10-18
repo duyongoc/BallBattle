@@ -84,7 +84,9 @@ public class LandMgr : MonoBehaviour
         timer -= Time.deltaTime;
 
         if(timer <= 0)
-            ChangePhaseGame();
+        {
+            GameMgr.GetInstance().SetPhaseDraw();
+        }
     }
 
     private void OnUpdatePhaseDown()
