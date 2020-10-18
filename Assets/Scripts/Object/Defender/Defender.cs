@@ -11,11 +11,11 @@ public class Defender : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
-    [Header("Enable the Defender")]
+    [Header("Chage the effect with state")]
     public GameObject circleDetection;
     public Material matInactive;
-
-
+    public GameObject shapeRenderer;
+    
     [Header("Current state of defender")]
     public State currentState = State.Stand;
     public enum State { Spawning, Stand, Moving, Inactive, ReturnPos, None }
@@ -36,6 +36,10 @@ public class Defender : MonoBehaviour
     private Material matDefault;
     private Vector3 originPos;
 
+    //component
+    private Animator animator;
+
+
     private void LoadData()
     {
         spawnTime = scriptDefender.spawnTime;
@@ -53,11 +57,17 @@ public class Defender : MonoBehaviour
 
         //
         originPos = transform.position;
-        matDefault = GetComponent<Renderer>().material;
+        matDefault = shapeRenderer.GetComponent<Renderer>().material;
+
+        //get component
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        if(!GameMgr.GetInstance().IsStateInGame())
+            return;
+            
         switch (currentState)
         {
             case State.Spawning:
@@ -141,10 +151,11 @@ public class Defender : MonoBehaviour
     }
     #endregion
 
-    public void ChangeStateInactive()
+    public void EnableStateInactive()
     {
+        
         circleDetection.SetActive(false);
-        GetComponent<Renderer>().material = matInactive;
+        shapeRenderer.GetComponent<Renderer>().material = matInactive;
         
         ChangeState(State.ReturnPos);
     }
@@ -166,14 +177,16 @@ public class Defender : MonoBehaviour
 
     public void SetDefenderActive()
     {
+        animator.SetBool("Inactive", false);
         circleDetection.SetActive(true);
-        GetComponent<Renderer>().material = matDefault;
+        shapeRenderer.GetComponent<Renderer>().material = matDefault;
     }
 
     public void SetDefenderInactive()
     {
+        animator.SetBool("Inactive", true);
         circleDetection.SetActive(false);
-        GetComponent<Renderer>().material = matInactive;
+        shapeRenderer.GetComponent<Renderer>().material = matInactive;
     }
 
     public void SetStateMove(Transform tar)

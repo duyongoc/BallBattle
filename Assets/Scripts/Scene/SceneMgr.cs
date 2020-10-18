@@ -7,8 +7,10 @@ public class SceneMgr : MonoBehaviour
     [Header("All of scene in game")]
     public SceneMenu m_sceneMenu;
     public SceneInGame m_sceneInGame;
-    public SceneGameOver m_sceneGameOver;
-    //current state scene
+    public SceneEndPhase m_sceneEndPhase;
+    public SceneEndGame m_sceneEndGame;
+
+    [Header("current state of scene")]
     private StateScene currentState; 
     public StateScene CurrentState { get => currentState; set => currentState = value; }
 
@@ -59,9 +61,10 @@ public class SceneMgr : MonoBehaviour
 
     public void SetActivePanelScene(string panelName)
     {
+        // m_scseneInGame.gameObject.SetActive(panelName.Contains(m_sceneInGame.name));
         m_sceneMenu.gameObject.SetActive(panelName.Contains(m_sceneMenu.name));
-        m_sceneInGame.gameObject.SetActive(panelName.Contains(m_sceneInGame.name));
-        m_sceneGameOver.gameObject.SetActive(panelName.Contains(m_sceneGameOver.name));
+        m_sceneEndPhase.gameObject.SetActive(panelName.Contains(m_sceneEndPhase.name));
+        m_sceneEndGame.gameObject.SetActive(panelName.Contains(m_sceneEndGame.name));
     }
 
     public static SceneMgr GetInstance()
@@ -69,9 +72,14 @@ public class SceneMgr : MonoBehaviour
         return s_instance;
     }
 
-    public bool IsStateInGame()
+    public void EndOfPhase()
     {
-        return false;//m_sceneInGame.isPlaying;
+
+    }
+
+    public void EndOfGame()
+    {
+
     }
 
     // public bool IsStateTutorial()

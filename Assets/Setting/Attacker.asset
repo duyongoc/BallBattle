@@ -15,5 +15,6 @@ MonoBehaviour:
   energyRegen: 0.5
   energyCost: 2
   spawnTime: 1
+  reactivateTime: 3
   normalSpeed: 3.5
   carryingSpeed: 0.75

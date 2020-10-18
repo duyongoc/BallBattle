@@ -472,6 +472,8 @@ MonoBehaviour:
   scriptDefender: {fileID: 11400000, guid: e787b3aa8ce98cb418cd7523a6e0d13e, type: 2}
   spawnTimeSlider: {fileID: 683271945}
   circleDetection: {fileID: 5980358345356875903}
+  matInactive: {fileID: 2100000, guid: c7365d28fcaef514abd9a28dea20273b, type: 2}
+  shapeRenderer: {fileID: 5387332918154335823}
   currentState: 0
 --- !u!1 &5387332917605004075
 GameObject:

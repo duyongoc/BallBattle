@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Defender
   m_EditorClassIdentifier: 
   energyRegen: 0.5
-  energyCost: 2
+  energyDefenderCost: 3
   spawnTime: 1
+  reactivateTime: 4
   normalSpeed: 4
   carryingSpeed: 0.75
   returnSpeed: 2

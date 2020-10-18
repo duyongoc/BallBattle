@@ -57,6 +57,10 @@ public class LandMgr : MonoBehaviour
 
     private void Update()
     {
+        // stop all action when game's state not in game
+        if(!GameMgr.GetInstance().IsStateInGame())
+            return;
+        
         UpdatePhase();
         switch (currentPhase)
         {
@@ -80,7 +84,7 @@ public class LandMgr : MonoBehaviour
         timer -= Time.deltaTime;
 
         if(timer <= 0)
-            ChangePhaseWithTime();
+            ChangePhaseGame();
     }
 
     private void OnUpdatePhaseDown()
@@ -92,12 +96,18 @@ public class LandMgr : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100, layer_mask))
             {
-                if(hit.point.z < 0)
+                if(hit.point.z < 0) // Player
                 {
+                    if(!spawnMgr.UsingPlayerEnergy())
+                        return;
+
                     spawnMgr.SpawnAttacker(hit.point);
                 }
-                else if(hit.point.z > 0)
+                else if(hit.point.z > 0) // Enemy
                 {
+                    if(!spawnMgr.UsingEnemyEnergy())
+                        return;
+
                     spawnMgr.SpawnDefender(hit.point);
                 }
                 // Debug.Log(hit.point.z);
@@ -114,12 +124,19 @@ public class LandMgr : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100, layer_mask))
             {
-                if(hit.point.z < 0)
+
+                if(hit.point.z < 0) // Player
                 {
+                    if(!spawnMgr.UsingPlayerEnergy())
+                        return;
+
                     spawnMgr.SpawnDefender(hit.point);
                 }
-                else if(hit.point.z > 0)
+                if(hit.point.z > 0) // Enemy
                 {
+                    if(!spawnMgr.UsingEnemyEnergy())
+                        return;
+
                     spawnMgr.SpawnAttacker(hit.point);
                 }
                 // Debug.Log(hit.point.z);
@@ -128,7 +145,7 @@ public class LandMgr : MonoBehaviour
     }
     #endregion
 
-    private void ChangePhaseWithTime()
+    public void ChangePhaseGame()
     {
         if(IsPhaseDown())
             currentPhase = Phase.UP;

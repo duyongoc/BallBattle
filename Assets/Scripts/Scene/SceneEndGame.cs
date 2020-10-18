@@ -3,9 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SceneGameOver : StateScene
+public class SceneEndGame : StateScene
 {
+    [Header("Param")]
+    public Text txtName;
+    public Text txtStatus;
 
+    public void Init(int numEneny, int numPlayer, string status)
+    {
+        string strName = numPlayer > numEneny ? "Player" : "Enemy";
+
+        txtName.text = "Enemy: " + numEneny + "\n";
+        txtName.text += "Player: " + numPlayer;
+
+        txtStatus.text = strName + " " + status;
+    }
+    
+    #region UNITY
     public override void StartState()
     {
         base.EndState();
@@ -27,6 +41,7 @@ public class SceneGameOver : StateScene
         base.EndState();
 
     }
+    #endregion
 
     #region Events of button
     public void OnPressButtonReplay()
@@ -54,4 +69,5 @@ public class SceneGameOver : StateScene
         // reset Mgr
         
     }
+    
 }

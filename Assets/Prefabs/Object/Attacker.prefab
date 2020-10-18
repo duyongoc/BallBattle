@@ -563,6 +563,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scriptAttacker: {fileID: 11400000, guid: fd5eff016e49e9e4497ed09c96e04f78, type: 2}
   spawnTimeSlider: {fileID: 298114067}
+  matInactive: {fileID: 2100000, guid: 2a6f66cf60089f14a8ab7f6b6f4a1de5, type: 2}
+  shapeRenderer: {fileID: 2834641630537303265}
   transHoldBall: {fileID: 713237634}
   currentState: 0
 --- !u!95 &36830860

@@ -1,17 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ScenePhase : StateScene
+public class SceneEndPhase : StateScene
 {
+    [Header("Param")]
+    public Text txtName;
+    public Text txtStatus;
+
+
+    public void Init(string name, string status)
+    {
+        txtName.text = name;
+        txtStatus.text = status;
+    }
+
+    #region UNITY
     public override void StartState()
     {
         base.EndState();
         Owner.SetActivePanelScene(this.name);
 
-        //sound
-        // SoundMgr.GetInstance().StopSound();
-        // SoundMgr.GetInstance().PlaySoundOneShot(m_audioEnd);
     }
 
     public override void UpdateState()
@@ -25,26 +35,17 @@ public class ScenePhase : StateScene
         base.EndState();
 
     }
+    #endregion
 
     #region Events of button
-    public void OnPressButtonReplay()
+    public void OnPressButtonOK()
     {
         Reset();
+
+        LandMgr.GetInstance().ChangePhaseGame();
         Owner.ChangeState(Owner.m_sceneInGame);
-        
     }
 
-    public void OnPressButtonMenu()
-    {
-        Reset();
-        owner.ChangeState(Owner.m_sceneMenu);
-    }
-
-    public void OnPressButtonExit()
-    {
-        Application.Quit();
-
-    }
     #endregion
 
     private void Reset()
@@ -52,4 +53,6 @@ public class ScenePhase : StateScene
         // reset Mgr
         
     }
+
+
 }

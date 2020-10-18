@@ -10,7 +10,7 @@ public class ScriptAttacker: ScriptableObject
     public float energyRegen = 0.5f;
 
     [Header("Energy cost")]
-    public float energyCost = 2;
+    public float energyAttackerCost = 2;
 
     [Header("Spawn time")]
     public float spawnTime = 0.5f;

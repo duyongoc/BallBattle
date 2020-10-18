@@ -12,8 +12,9 @@ public class Attacker : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
-    [Header("Enable the Attacker")]
+    [Header("Chage the effect with state")]
     public Material matInactive;
+    public GameObject shapeRenderer;
 
     [Header("Position to hold the ball")]
     public Transform transHoldBall;
@@ -35,11 +36,16 @@ public class Attacker : MonoBehaviour
 
     private Material matDefault;
 
+    //component
+    private Animator animator;
+
 
     private void LoadData()
     {
         normalSpeed = scriptAttacker.normalSpeed;
+        reactivateTime = scriptAttacker.reactivateTime;
         spawnTime = scriptAttacker.spawnTime;
+        
     }
 
     #region UNITY
@@ -48,11 +54,17 @@ public class Attacker : MonoBehaviour
         LoadData();
 
         //
-        matDefault = GetComponent<Renderer>().material;
+        matDefault = shapeRenderer.GetComponent<Renderer>().material;
+
+        //get component
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        if(!GameMgr.GetInstance().IsStateInGame())
+            return;
+
         switch (currentState)
         {
             case State.Waiting:
@@ -73,8 +85,9 @@ public class Attacker : MonoBehaviour
 
             case State.None:
                 break;
-        }
 
+            
+        }
     }
     #endregion
 
@@ -124,25 +137,23 @@ public class Attacker : MonoBehaviour
                 continue;
 
             var disTmp = Vector3.Distance(transform.position, go.transform.position);
-            if (disTmp != 0 && disTmp < distance && atk.CheckValidPostion(atk))
+            if (disTmp != 0 && disTmp < distance && atk.CheckValidPostion(atk.transform))
             {
                 distance = disTmp;
                 otherAttacker = go;
             }
         }
-
+        
         if(otherAttacker != null && ball != null)
         {
             ball.GetComponent<Ball>().SetTarget(otherAttacker.transform);
             ball = null;
         }
-
         StartCoroutine("ChangeStateInactiveWithTime", reactivateTime);
 
-        // game over
         if (otherAttacker == null)
         {
-
+            GameMgr.GetInstance().CheckPhaseWinOfAttacker();
         }
     }
 
@@ -171,26 +182,30 @@ public class Attacker : MonoBehaviour
 
     public void SetAttackerActive()
     {
-        GetComponent<Renderer>().material = matDefault;
-        GetComponent<Collider>().enabled = true;
+        animator.SetBool("Inactive", false);
+        shapeRenderer.GetComponent<Renderer>().material = matDefault;
+        this.GetComponent<Collider>().enabled = true;
     }
 
     public void SetAttackerInactive()
     {
-        GetComponent<Renderer>().material = matInactive;
-        GetComponent<Collider>().enabled = false;
+        animator.SetBool("Inactive", true);
+        shapeRenderer.GetComponent<Renderer>().material = matInactive;
+        this.GetComponent<Collider>().enabled = false;
     }
 
     public bool CheckValidPostion(Transform tran)
     {
         if(LandMgr.GetInstance().IsPhaseDown())
         {
-            return (tran.position.z < -12);
-        }
-        else if(LandMgr.GetInstance().IsPhaseUp())
-        {
             return (tran.position.z < 12);
         }
+        if(LandMgr.GetInstance().IsPhaseUp())
+        {
+            return (tran.position.z > -12);
+        }
+
+        return false;
     }
 
     public bool CheckStateInactive()
