@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class SceneInGame : StateScene
 {
-    [Header("Tap to play in scene in game")]
-    public GameObject textTapToPlay;
+    [Header("Object")]
+    public GameObject landObject;
+    public GameObject mazeObject;
+
+    public AudioClip ingameAudio;
     
 
     public override void StartState()
@@ -14,6 +17,12 @@ public class SceneInGame : StateScene
         base.EndState();
         Owner.SetActivePanelScene(this.name);
         
+        landObject.SetActive(true);
+        mazeObject.SetActive(false);
+
+        //sound
+        SoundMgr.GetInstance().StopSound();
+        SoundMgr.GetInstance().PlaySoundOneShot(ingameAudio);
     }
 
     public override void UpdateState()

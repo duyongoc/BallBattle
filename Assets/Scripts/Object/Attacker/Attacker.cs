@@ -12,6 +12,11 @@ public class Attacker : MonoBehaviour
     [Header("Slider process spaw attacker")]
     public Slider spawnTimeSlider;
 
+    [Header("Make dissolve effect when destroy obstacle")]
+    public Material marDissolve;
+    public GameObject parExplosion;
+    public GameObject attackerDir;
+
     [Header("Chage the effect with state")]
     public Material matInactive;
     public GameObject shapeRenderer;
@@ -21,9 +26,8 @@ public class Attacker : MonoBehaviour
 
     [Header("State of Attacker")]
     public State currentState = State.Waiting;
-    public enum State { Waiting, Stand, Moving, Inactive, None }
+    public enum State { Waiting, Stand, Moving, Inactive, None };
 
-    
     //
     //private 
     //
@@ -132,15 +136,18 @@ public class Attacker : MonoBehaviour
         float distance = 100;
         foreach (GameObject go in listAttacker)
         {
-            var atk = go.GetComponent<Attacker>();
-            if(atk.CheckStateInactive())
-                continue;
-
-            var disTmp = Vector3.Distance(transform.position, go.transform.position);
-            if (disTmp != 0 && disTmp < distance && atk.CheckValidPostion(atk.transform))
+            if(go != null)
             {
-                distance = disTmp;
-                otherAttacker = go;
+                var atk = go.GetComponent<Attacker>();
+                if(atk.CheckStateInactive())
+                    continue;
+
+                var disTmp = Vector3.Distance(transform.position, go.transform.position);
+                if (disTmp != 0 && disTmp < distance && atk.CheckValidPostion(atk.transform))
+                {
+                    distance = disTmp;
+                    otherAttacker = go;
+                }
             }
         }
         
@@ -208,6 +215,11 @@ public class Attacker : MonoBehaviour
         return false;
     }
 
+    public void RemoveChild(GameObject go)
+    {
+        ball = null;
+    }
+
     public bool CheckStateInactive()
     {
         return currentState == State.Inactive;
@@ -218,6 +230,36 @@ public class Attacker : MonoBehaviour
         currentState = newState;
     }
 
+    public void DissolveObstacle()
+    {
+        ChangeState(State.None);
+
+        attackerDir.SetActive(false);
+        GetComponent<Collider>().enabled = false;
+        shapeRenderer.GetComponent<Renderer>().material = marDissolve;
+        Instantiate(parExplosion, this.transform.position, Quaternion.Euler(-90f, 0f, 0f));
+
+        StartCoroutine("OnDissolve");
+    }
+
+    IEnumerator OnDissolve()
+    {
+        float timer = 1;
+        float process = 0;
+        
+        while(timer >= 0)
+        {
+            yield return new WaitForSeconds(0.02f);
+
+            timer -= 0.02f;
+            process += 0.02f;
+            marDissolve.SetFloat("_processDissolve", process);
+        };
+        
+        marDissolve.SetFloat("_processDissolve", 0);
+        Destroy(gameObject);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Ball")
@@ -225,6 +267,14 @@ public class Attacker : MonoBehaviour
             ball = other.gameObject;
             ball.transform.position = transHoldBall.position;
             ball.transform.SetParent(this.transform);
+        }
+        else if(other.tag == "Gate")
+        {
+            GameMgr.GetInstance().CheckPhaseWinInGate(ball != null);
+        }
+        else if(other.tag == "TheWall")
+        {
+            DissolveObstacle();
         }
     }
 

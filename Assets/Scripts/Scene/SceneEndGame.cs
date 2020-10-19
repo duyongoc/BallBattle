@@ -9,14 +9,41 @@ public class SceneEndGame : StateScene
     public Text txtName;
     public Text txtStatus;
 
+    [Header("Button text")]
+    public Text txtBtnOK;
+
+    [Header("Object")]
+    public GameObject landObject;
+    public GameObject mazeObject;
+
+    [Header("Finder")]
+    public Finder finder;
+
+    //
+    //  private
+    //
+    private bool makePenatly = false;
+
     public void Init(int numEneny, int numPlayer, string status)
     {
         string strName = numPlayer > numEneny ? "Player" : "Enemy";
-
         txtName.text = "Enemy: " + numEneny + "\n";
         txtName.text += "Player: " + numPlayer;
 
         txtStatus.text = strName + " " + status;
+
+        if(numPlayer == numEneny)
+        {
+            makePenatly = true;
+            txtStatus.text = "Game Draw";
+            txtBtnOK.text = "Penatly";
+        }
+    }
+
+    public void InitMaze(string intro, string name, string status)
+    {
+        txtName.text = intro;
+        txtStatus.text = name + " " + status;
     }
     
     #region UNITY
@@ -40,34 +67,39 @@ public class SceneEndGame : StateScene
     {
         base.EndState();
 
+        txtBtnOK.text = "OK";
+        makePenatly = false;
+
+        landObject.SetActive(true);
+        mazeObject.SetActive(false);
+
     }
     #endregion
 
     #region Events of button
-    public void OnPressButtonReplay()
+    public void OnPressButtonOK()
     {
         Reset();
-        Owner.ChangeState(Owner.m_sceneInGame);
+
+        if(!makePenatly)
+        {
+            Owner.ChangeState(Owner.m_sceneInGame);
+        }
+        else
+        {
+            Owner.ChangeState(Owner.m_sceneMaze);
+        }
         
-    }
-
-    public void OnPressButtonMenu()
-    {
-        Reset();
-        owner.ChangeState(Owner.m_sceneMenu);
-    }
-
-    public void OnPressButtonExit()
-    {
-        Application.Quit();
-
     }
     #endregion
 
     private void Reset()
     {   
         // reset Mgr
-        
+        GameMgr.GetInstance().Reset();
+        LandMgr.GetInstance().Reset();
+        SpawnMgr.GetInstance().ResetEnergy();
+        finder.Reset();
     }
     
 }

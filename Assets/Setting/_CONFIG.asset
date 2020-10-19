@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623bf2b517bf0a849912539f751d4950, type: 3}
   m_Name: _CONFIG
   m_EditorClassIdentifier: 
-  timeLimit: 20
+  timeLimit: 140
   ballSpeed: 5

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SceneMenu : StateScene
 {
+    public AudioClip menuAudio;
 
     #region SCENE
     public override void StartState()
@@ -11,6 +12,9 @@ public class SceneMenu : StateScene
         base.StartState();
         Owner.SetActivePanelScene(this.name);
 
+        //sound
+        SoundMgr.GetInstance().StopSound();
+        SoundMgr.GetInstance().PlaySoundOneShot(menuAudio);
     }
 
     public override void UpdateState()

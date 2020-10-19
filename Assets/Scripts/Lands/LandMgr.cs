@@ -187,4 +187,10 @@ public class LandMgr : MonoBehaviour
     {
         return currentPhase == Phase.UP;
     }
+
+    public void Reset()
+    {
+        ResetPhase();
+        timer = timeLimit;
+    }
 }

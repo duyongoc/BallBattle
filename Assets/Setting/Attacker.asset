@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Attacker
   m_EditorClassIdentifier: 
   energyRegen: 0.5
-  energyCost: 2
+  energyAttackerCost: 2
   spawnTime: 1
   reactivateTime: 3
   normalSpeed: 3.5

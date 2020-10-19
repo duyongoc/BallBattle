@@ -493,8 +493,8 @@ GameObject:
   - component: {fileID: 2834641630362308508}
   - component: {fileID: 2834641630362308511}
   - component: {fileID: 2834641630362308498}
-  - component: {fileID: 2834641630362308509}
   - component: {fileID: 36830860}
+  - component: {fileID: 2834641630362308509}
   m_Layer: 0
   m_Name: Attacker
   m_TagString: Attacker
@@ -549,24 +549,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2834641630362308509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2834641630362308510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 760022ae37f065b46a65256b161e0583, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scriptAttacker: {fileID: 11400000, guid: fd5eff016e49e9e4497ed09c96e04f78, type: 2}
-  spawnTimeSlider: {fileID: 298114067}
-  matInactive: {fileID: 2100000, guid: 2a6f66cf60089f14a8ab7f6b6f4a1de5, type: 2}
-  shapeRenderer: {fileID: 2834641630537303265}
-  transHoldBall: {fileID: 713237634}
-  currentState: 0
 --- !u!95 &36830860
 Animator:
   serializedVersion: 3
@@ -586,6 +568,28 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2834641630362308509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2834641630362308510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760022ae37f065b46a65256b161e0583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptAttacker: {fileID: 11400000, guid: fd5eff016e49e9e4497ed09c96e04f78, type: 2}
+  spawnTimeSlider: {fileID: 298114067}
+  marDissolve: {fileID: 2100000, guid: 4e5b3c88d21a3c34b955a09fb5db7d4d, type: 2}
+  parExplosion: {fileID: 4098995727517569454, guid: 3af103157dbbffd43ae90fd5e8ed5553,
+    type: 3}
+  attackerDir: {fileID: 2834641629644888286}
+  matInactive: {fileID: 2100000, guid: 2a6f66cf60089f14a8ab7f6b6f4a1de5, type: 2}
+  shapeRenderer: {fileID: 2834641630537303265}
+  transHoldBall: {fileID: 713237634}
+  currentState: 0
 --- !u!1 &2834641630537303265
 GameObject:
   m_ObjectHideFlags: 0

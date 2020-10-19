@@ -9,6 +9,7 @@ public class SceneMgr : MonoBehaviour
     public SceneInGame m_sceneInGame;
     public SceneEndPhase m_sceneEndPhase;
     public SceneEndGame m_sceneEndGame;
+    public SceneMaze m_sceneMaze;
 
     [Header("current state of scene")]
     private StateScene currentState; 
@@ -29,8 +30,10 @@ public class SceneMgr : MonoBehaviour
     #region UNITY
     private void Start()
     {
-        //ChangeState(m_sceneMenu);
+        // ChangeState(m_sceneMenu);
         ChangeState(m_sceneInGame);
+        // ChangeState(m_sceneMaze);
+        
     }
 
     private void FixedUpdate()
@@ -65,6 +68,7 @@ public class SceneMgr : MonoBehaviour
         m_sceneMenu.gameObject.SetActive(panelName.Contains(m_sceneMenu.name));
         m_sceneEndPhase.gameObject.SetActive(panelName.Contains(m_sceneEndPhase.name));
         m_sceneEndGame.gameObject.SetActive(panelName.Contains(m_sceneEndGame.name));
+        m_sceneMaze.gameObject.SetActive(panelName.Contains(m_sceneMaze.name));
     }
 
     public static SceneMgr GetInstance()
